@@ -1,0 +1,93 @@
+package com.bakhilin.jsfgraph;
+
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.context.FacesContext;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Locale;
+
+import com.bakhilin.jsfgraph.db.DAOFactory;
+import com.bakhilin.jsfgraph.entity.ResultEntity;
+import com.bakhilin.jsfgraph.utils.AreaChecker;
+
+
+/**
+ * Managed bean for handling results in JSF application.
+ * This bean is responsible for managing operations related to result entities.
+ */
+@Getter
+@Setter
+@Slf4j
+public class ResultsControllerBean implements Serializable {
+    private XCoordinateBean xCoordinateBean;
+    private YCoordinateBean yCoordinateBean;
+    private RCoordinateBean rCoordinateBean;
+
+    private ArrayList<ResultEntity> results = new ArrayList<>();
+
+    /**
+     * Initializes the bean and loads existing results from the database.
+     */
+    @PostConstruct
+    public void init() {
+        var resultsEntities = DAOFactory.getInstance().getResultDAO().getAllResults();
+        results = new ArrayList<>(resultsEntities);
+        log.info("Results initialized with {} entries.", results.size());
+    }
+
+    /**
+     * Adds a new result based on the provided coordinates and radius.
+     * The method also calculates if the point is within the area and updates the UI accordingly.
+     * Note: 'en' refers to a new instance of ResultEntity (a.k.a. 'entity').
+     *
+     * @param x the x-coordinate of the point
+     * @param y the y-coordinate of the point
+     * @param r the radius for the area check
+     */
+    public void addResult(Double x, Double y, Double r) {
+        boolean result = AreaChecker.isInArea(x, y, r);
+
+        ResultEntity en = ResultEntity.builder().x(x).y(y).r(r).result(result).build();
+
+        results.add(en);
+        DAOFactory.getInstance().getResultDAO().addNewResult(en);
+        log.info("Added new result to the db: X={}, Y={}, R={}", x, y, r);
+
+        String script = String.format(Locale.US, "window.drawDotOnCanvas(%f, %f, %f, %b, true);", x, y, r, result);
+        FacesContext.getCurrentInstance().getPartialViewContext().getEvalScripts().add(script);
+    }
+
+    /**
+     * Redraws all the points on the canvas, based on the new radius.
+     *
+     * @param r new radius
+     */
+    public void updateCanvas(double r) {
+        for (ResultEntity en : results) {
+            boolean result = AreaChecker.isInArea(en.getX(), en.getY(), r);
+            en.setR(r);
+            en.setResult(result);
+
+            String script = String.format(Locale.US, "window.drawDotOnCanvas(%f, %f, %f, %b, true);", en.getX(), en.getY(), r, result);
+            System.out.println("Script: " + script);
+            FacesContext.getCurrentInstance().getPartialViewContext().getEvalScripts().add(script);
+
+        }
+        log.info("Canvas updated with new radius: {}", r);
+    }
+
+    /**
+     * Clears the database and locally stored array from all the points
+     */
+    public void clearResults() {
+        DAOFactory.getInstance().getResultDAO().clearResults();
+        results.clear();
+        log.info("All results cleared from database and local array.");
+    }
+}
+

@@ -1,0 +1,12 @@
+/home/nikita/Desktop/interactive-graph-ui/src/main/java/com/bakhilin/jsfgraph/YCoordinateBean.java
+/home/nikita/Desktop/interactive-graph-ui/src/main/java/com/bakhilin/jsfgraph/db/JPAUtils.java
+/home/nikita/Desktop/interactive-graph-ui/src/main/java/com/bakhilin/jsfgraph/RCoordinateBean.java
+/home/nikita/Desktop/interactive-graph-ui/src/main/java/com/bakhilin/jsfgraph/ResultsControllerBean.java
+/home/nikita/Desktop/interactive-graph-ui/src/main/java/com/bakhilin/jsfgraph/XCoordinateBean.java
+/home/nikita/Desktop/interactive-graph-ui/src/main/java/com/bakhilin/jsfgraph/CoordinateHandlerBean.java
+/home/nikita/Desktop/interactive-graph-ui/src/main/java/com/bakhilin/jsfgraph/entity/ResultEntity.java
+/home/nikita/Desktop/interactive-graph-ui/src/main/java/com/bakhilin/jsfgraph/db/ResultDAOImpl.java
+/home/nikita/Desktop/interactive-graph-ui/src/main/java/com/bakhilin/jsfgraph/db/ResultDAO.java
+/home/nikita/Desktop/interactive-graph-ui/src/main/java/com/bakhilin/CommaToDotConverter.java
+/home/nikita/Desktop/interactive-graph-ui/src/main/java/com/bakhilin/jsfgraph/utils/AreaChecker.java
+/home/nikita/Desktop/interactive-graph-ui/src/main/java/com/bakhilin/jsfgraph/db/DAOFactory.java
